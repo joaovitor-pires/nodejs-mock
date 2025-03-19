@@ -24,8 +24,16 @@ app.post('/products', (req, res) => {
 });
 
 //Atualiza completamente
-app.put('/products', (req, res) => {
-    const  { name, marca, tamanho, cor } = req.body;
+app.put('/products/:id', (req, res) => {
+    const { id } = req.params;
+    const { name } = req.body;
+
+    const productIndex = products.findIndex(product => product.id == id);
+    if (productIndex == -1) {
+        return res.status(404).send();
+    }
+
+    products[productIndex] = { ...products[productIndex], name }
 
     res.status(200).json(products).send();
 });
