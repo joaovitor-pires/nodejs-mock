@@ -17,8 +17,8 @@ app.get('/products', (req, res) => {
 
 //Cria
 app.post('/products', (req, res) => {
-    const  { name } = req.body;
-    products.push({id : products.length + 1, name});
+    const  { name, status } = req.body;
+    products.push({id : products.length + 1, name, status});
 
     res.status(201).json().send();
 });
@@ -33,15 +33,21 @@ app.put('/products/:id', (req, res) => {
         return res.status(404).send();
     }
 
-    products[productIndex] = { ...products[productIndex], name }
-
+    products[productIndex] = { ...products[productIndex], name };
     res.status(200).json(products).send();
 });
 
 //Atualiza apenas um
-app.patch('/products', (req, res) => {
+app.patch('/products/:id/status', (req, res) => {
+    const { id } = req.params;
+    const { status} = req.body;
 
+    const productIndex = products.findIndex(product => product.id == id);
+    if (productIndex == -1) {
+        return res.status(404).send();
+    }
 
+    products[productIndex] = { ...products[productIndex], status }; 
     res.status(200).json(products).send();
 });
 
